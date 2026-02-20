@@ -3352,3 +3352,59 @@ footer {
         transition-duration: 0.01ms !important;
     }
 }
+
+/* ========== MOBILE: Disable heavy animations to prevent blinking ========== */
+@media (max-width: 768px) {
+    /* Hide all floating blobs & particles on mobile */
+    .blob, .blob1, .blob2, .blob3, .blob4, .blob5 {
+        display: none !important;
+    }
+
+    .particles, .particle {
+        display: none !important;
+    }
+
+    .animated-gradient {
+        animation: none !important;
+    }
+
+    /* Disable hero floating shapes */
+    .hero .floating-blob-1,
+    .hero .floating-blob-2,
+    .hero .floating-blob-3,
+    .hero-3d-shape,
+    .hero-3d-shapes {
+        display: none !important;
+    }
+
+    /* Keep bg-canvas as static gradient only */
+    .bg-canvas {
+        background: linear-gradient(135deg, #0B1120 0%, #0F1B2E 50%, #111827 100%);
+    }
+
+    /* Disable CTA glow pulsing */
+    .cta-primary {
+        animation: none !important;
+    }
+
+    /* Simplify logo animation */
+    .logo {
+        animation: none !important;
+    }
+
+    /* Reduce all transition durations on mobile */
+    .feature-card,
+    .plan-card,
+    .faq-item,
+    .testimonial-card,
+    .nav-link {
+        transition-duration: 0.15s !important;
+    }
+
+    /* Make animate-in instant on mobile */
+    .animate-in {
+        opacity: 1 !important;
+        transform: none !important;
+        transition-duration: 0.1s !important;
+    }
+}
