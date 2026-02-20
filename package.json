@@ -2,6 +2,7 @@
   "name": "fiberlink-react",
   "version": "1.0.0",
   "private": true,
+  "homepage": "https://Musa-010.github.io/Ubadah-fiber",
   "description": "Ubadah Internet — Connect Smarter, Live Faster (React)",
   "dependencies": {
     "firebase": "^12.9.0",
@@ -18,7 +19,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "browserslist": {
     "production": [
