@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/Ubadah-fiber/static/css/main.ce577eb6.css",
-    "main.js": "/Ubadah-fiber/static/js/main.eb45da6a.js",
+    "main.css": "/Ubadah-fiber/static/css/main.c2ae1bf0.css",
+    "main.js": "/Ubadah-fiber/static/js/main.d0498a1f.js",
     "index.html": "/Ubadah-fiber/index.html",
-    "main.ce577eb6.css.map": "/Ubadah-fiber/static/css/main.ce577eb6.css.map",
-    "main.eb45da6a.js.map": "/Ubadah-fiber/static/js/main.eb45da6a.js.map"
+    "main.c2ae1bf0.css.map": "/Ubadah-fiber/static/css/main.c2ae1bf0.css.map",
+    "main.d0498a1f.js.map": "/Ubadah-fiber/static/js/main.d0498a1f.js.map"
   },
   "entrypoints": [
-    "static/css/main.ce577eb6.css",
-    "static/js/main.eb45da6a.js"
+    "static/css/main.c2ae1bf0.css",
+    "static/js/main.d0498a1f.js"
   ]
 }

@@ -1,10 +1,24 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 
+function useIsMobile(breakpoint = 768) {
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== 'undefined' && window.innerWidth <= breakpoint
+  );
+  useEffect(() => {
+    const mql = window.matchMedia(`(max-width: ${breakpoint}px)`);
+    const handler = (e) => setIsMobile(e.matches);
+    mql.addEventListener('change', handler);
+    return () => mql.removeEventListener('change', handler);
+  }, [breakpoint]);
+  return isMobile;
+}
+
 export default function Hero() {
   const [displayText, setDisplayText] = useState('');
   const [counter, setCounter] = useState(0);
   const heroCardRef = useRef(null);
   const fullText = 'Connect Smarter, Live Faster';
+  const isMobile = useIsMobile();
 
   // Typing effect
   useEffect(() => {
@@ -20,9 +34,16 @@ export default function Hero() {
     return () => clearInterval(timer);
   }, []);
 
-  // Counter animation
+  // Counter animation — simplified on mobile (no 60fps, no fluctuation)
   useEffect(() => {
     const target = 12847;
+
+    if (isMobile) {
+      // On mobile: just set the final value immediately, no animation
+      setCounter(target);
+      return;
+    }
+
     const duration = 2000;
     const increment = target / (duration / 16);
     let current = 0;
@@ -46,10 +67,11 @@ export default function Hero() {
       clearInterval(timer);
       clearInterval(fluctuation);
     };
-  }, []);
+  }, [isMobile]);
 
-  // Hero card 3D tilt effect
+  // Hero card 3D tilt effect — desktop only
   useEffect(() => {
+    if (isMobile) return;
     const card = heroCardRef.current;
     if (!card) return;
 
@@ -75,7 +97,7 @@ export default function Hero() {
       card.removeEventListener('mousemove', handleMouseMove);
       card.removeEventListener('mouseleave', handleMouseLeave);
     };
-  }, []);
+  }, [isMobile]);
 
   const scrollTo = useCallback((id) => {
     const el = document.getElementById(id);
@@ -84,10 +106,14 @@ export default function Hero() {
 
   return (
     <section className="hero" id="home">
-      {/* Floating 3D Blobs */}
-      <div className="floating-blob-1"></div>
-      <div className="floating-blob-2"></div>
-      <div className="floating-blob-3"></div>
+      {/* Floating 3D Blobs — desktop only */}
+      {!isMobile && (
+        <>
+          <div className="floating-blob-1"></div>
+          <div className="floating-blob-2"></div>
+          <div className="floating-blob-3"></div>
+        </>
+      )}
 
       <div className="hero-card" ref={heroCardRef}>
         <div className="hero-logo">⚡</div>

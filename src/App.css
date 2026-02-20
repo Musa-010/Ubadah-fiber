@@ -3366,6 +3366,7 @@ footer {
 
     .animated-gradient {
         animation: none !important;
+        display: none !important;
     }
 
     /* Disable hero floating shapes */
@@ -3380,6 +3381,7 @@ footer {
     /* Keep bg-canvas as static gradient only */
     .bg-canvas {
         background: linear-gradient(135deg, #0B1120 0%, #0F1B2E 50%, #111827 100%);
+        animation: none !important;
     }
 
     /* Disable CTA glow pulsing */
@@ -3406,5 +3408,62 @@ footer {
         opacity: 1 !important;
         transform: none !important;
         transition-duration: 0.1s !important;
+    }
+
+    /* Kill ALL CSS animations on mobile for elements that cause blinking */
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+    }
+
+    /* Disable backdrop-filter on mobile (GPU heavy) */
+    header, .nav-menu, .modal-overlay {
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        background: rgba(11, 17, 32, 0.95) !important;
+    }
+
+    /* Disable will-change on mobile */
+    .hero-card, .feature-card, .plan-card, 
+    .testimonial-card, .faq-item, .btn-primary, 
+    .btn-secondary, .cta-primary {
+        will-change: auto !important;
+        transform: none !important;
+        animation: none !important;
+    }
+
+    /* Disable box-shadow animations */
+    .hero-card:hover, .feature-card:hover, 
+    .plan-card:hover, .testimonial-card:hover {
+        transform: none !important;
+        box-shadow: none !important;
+    }
+
+    /* Status dot pulse - disable */
+    .status-dot {
+        animation: none !important;
+    }
+
+    /* Hero section - simplify */
+    .hero {
+        animation: none !important;
+    }
+
+    .hero-card {
+        animation: none !important;
+        transform: none !important;
+        perspective: none !important;
+    }
+
+    /* Disable gradient flow on hero */
+    .hero::before, .hero::after {
+        animation: none !important;
+        display: none !important;
+    }
+
+    /* Typing cursor - keep simple */
+    .tagline span {
+        animation: none !important;
     }
 }
