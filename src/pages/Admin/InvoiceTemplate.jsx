@@ -201,6 +201,12 @@ const InvoiceTemplate = forwardRef(({ invoice }, ref) => {
         <p style={{ margin: '6px 0 0', color: '#cbd5e1', fontSize: '12px' }}>
           This is a computer-generated invoice. No signature required.
         </p>
+        {/* Payment Method QR */}
+        <div style={{ margin: '24px auto 0', textAlign: 'center', breakInside: 'avoid', pageBreakInside: 'avoid', display: 'inline-block', width: '100%' }}>
+          <div style={{ fontWeight: 700, fontSize: '15px', color: '#0f1729', marginBottom: '8px' }}>JazzCash Payment Method</div>
+          <img src={require('../../assets/Jazz cash qr.jpeg')} alt="JazzCash QR" style={{ width: '180px', height: '180px', objectFit: 'contain', borderRadius: '12px', boxShadow: '0 2px 8px #2dd4bf33', background: '#fff' }} />
+          <div style={{ color: '#818cf8', fontSize: '13px', marginTop: '8px' }}>Scan QR to pay via JazzCash</div>
+        </div>
       </div>
     </div>
   );
