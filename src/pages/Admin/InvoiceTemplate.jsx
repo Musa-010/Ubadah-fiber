@@ -44,15 +44,16 @@ const InvoiceTemplate = forwardRef(({ invoice }, ref) => {
           position: 'absolute',
           top: '50%',
           left: '50%',
-          transform: 'translate(-50%, -50%) rotate(-20deg)',
-          fontSize: '90px',
+          transform: 'translate(-50%, -50%) rotate(-18deg)',
+          fontSize: '180px',
           fontWeight: 900,
-          color: 'rgba(45,212,191,0.13)',
-          letterSpacing: '10px',
-          zIndex: 1,
+          color: 'rgba(45,212,191,0.38)',
+          letterSpacing: '22px',
+          zIndex: 100,
           pointerEvents: 'none',
           userSelect: 'none',
           whiteSpace: 'nowrap',
+          textShadow: '0 8px 32px #2dd4bf, 0 2px 16px #818cf8',
         }}>
           PAID
         </div>
@@ -136,6 +137,14 @@ const InvoiceTemplate = forwardRef(({ invoice }, ref) => {
               <td style={{ padding: '12px 16px', textAlign: 'right', color: '#1a1a2e', fontWeight: '600' }}>{(item.amount || 0).toLocaleString()}</td>
             </tr>
           ))}
+          {/* Always show Rs 150 late fee row */}
+          <tr style={{ background: '#f0fdfa', fontWeight: 700 }}>
+            <td style={{ padding: '12px 16px', color: '#6b7280' }}>{(invoice.items || []).length + 1}</td>
+            <td style={{ padding: '12px 16px', color: '#1a1a2e', fontWeight: '700' }}>AFTER DUE DATE PAYMENT</td>
+            <td style={{ padding: '12px 16px', textAlign: 'center', color: '#6b7280' }}>1</td>
+            <td style={{ padding: '12px 16px', textAlign: 'right', color: '#6b7280' }}>Rs150.00</td>
+            <td style={{ padding: '12px 16px', textAlign: 'right', color: '#1a1a2e', fontWeight: '700' }}>Rs150.00</td>
+          </tr>
           {(!invoice.items || invoice.items.length === 0) && (
             <tr>
               <td colSpan="5" style={{ padding: '24px 16px', textAlign: 'center', color: '#9ca3af' }}>No items added</td>
