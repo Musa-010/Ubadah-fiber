@@ -11,28 +11,62 @@ const InvoiceTemplate = forwardRef(({ invoice }, ref) => {
   const subtotal = (invoice.items || []).reduce((sum, item) => sum + (item.amount || 0), 0);
   const tax = invoice.tax || 0;
   const discount = invoice.discount || 0;
-  const total = subtotal + tax - discount;
+  // Late fee logic: Rs 150 after due date if unpaid/overdue
+  let lateFee = 0;
+  const now = new Date();
+  let dueDateObj = invoice.dueDate;
+  if (dueDateObj && dueDateObj.toDate) dueDateObj = dueDateObj.toDate();
+  else if (typeof dueDateObj === 'string') dueDateObj = new Date(dueDateObj);
+  if (dueDateObj && now > dueDateObj && invoice.status !== 'paid') {
+    lateFee = 150;
+  }
+  const total = subtotal + tax - discount + lateFee;
 
   return (
     <div ref={ref} style={{
       fontFamily: "'Inter', 'Segoe UI', sans-serif",
-      maxWidth: '800px',
-      margin: '0 auto',
-      padding: '40px',
-      background: '#ffffff',
+      maxWidth: '820px',
+      margin: '32px auto',
+      padding: '0',
+      background: 'linear-gradient(135deg, #f0fdfa 0%, #fff 100%)',
       color: '#1a1a2e',
-      fontSize: '14px',
-      lineHeight: '1.6'
+      fontSize: '15px',
+      lineHeight: '1.7',
+      borderRadius: '18px',
+      boxShadow: '0 8px 32px 0 rgba(45,212,191,0.10), 0 1.5px 8px 0 rgba(129,140,248,0.08)',
+      position: 'relative',
+      overflow: 'hidden',
+      border: '1.5px solid #e0e7ef'
     }}>
+      {/* PAID Watermark */}
+      {invoice.status === 'paid' && (
+        <div style={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%) rotate(-20deg)',
+          fontSize: '90px',
+          fontWeight: 900,
+          color: 'rgba(45,212,191,0.13)',
+          letterSpacing: '10px',
+          zIndex: 1,
+          pointerEvents: 'none',
+          userSelect: 'none',
+          whiteSpace: 'nowrap',
+        }}>
+          PAID
+        </div>
+      )}
       {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '40px', borderBottom: '3px solid #2dd4bf', paddingBottom: '24px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '40px', borderBottom: '3.5px solid #2dd4bf', padding: '40px 48px 28px 48px', background: 'linear-gradient(90deg, #2dd4bf0d 0%, #818cf80d 100%)', borderTopLeftRadius: '18px', borderTopRightRadius: '18px', boxShadow: '0 2px 8px 0 rgba(45,212,191,0.04)', position: 'relative', zIndex: 2 }}>
         <div>
           <h1 style={{ fontSize: '28px', fontWeight: '800', margin: '0 0 4px 0', color: '#0f1729' }}>
-            ⚡ UBADAH
+            ⚡ NBB
           </h1>
           <p style={{ margin: '0', color: '#6b7280', fontSize: '13px' }}>Internet Service Provider</p>
           <p style={{ margin: '4px 0 0 0', color: '#6b7280', fontSize: '12px' }}>Shahkhailghari, Pakistan</p>
           <p style={{ margin: '2px 0 0 0', color: '#6b7280', fontSize: '12px' }}>📞 +92 3145205027</p>
+           <p style={{ margin: '2px 0 0 0', color: '#6b7280', fontSize: '12px' }}>📞 +92 349 3759146</p>
           <p style={{ margin: '2px 0 0 0', color: '#6b7280', fontSize: '12px' }}>📧 nbbshahkhailghari@gmail.com</p>
         </div>
         <div style={{ textAlign: 'right' }}>
@@ -65,7 +99,7 @@ const InvoiceTemplate = forwardRef(({ invoice }, ref) => {
       </div>
 
       {/* Bill To */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '32px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '32px', padding: '0 48px', zIndex: 2, position: 'relative' }}>
         <div style={{ flex: 1 }}>
           <h3 style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '1.5px', color: '#9ca3af', margin: '0 0 8px 0' }}>Bill To</h3>
           <p style={{ margin: '0', fontWeight: '600', fontSize: '16px', color: '#0f1729' }}>{invoice.userName || 'N/A'}</p>
@@ -82,7 +116,7 @@ const InvoiceTemplate = forwardRef(({ invoice }, ref) => {
       </div>
 
       {/* Items Table */}
-      <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '24px' }}>
+      <table style={{ width: 'calc(100% - 96px)', margin: '0 48px 24px 48px', borderCollapse: 'separate', borderSpacing: 0, boxShadow: '0 1px 8px 0 rgba(129,140,248,0.04)', background: '#fff', borderRadius: '12px', overflow: 'hidden', zIndex: 2, position: 'relative' }}>
         <thead>
           <tr style={{ background: '#0f1729' }}>
             <th style={{ padding: '12px 16px', textAlign: 'left', color: '#e2e8f0', fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.5px', fontWeight: '600' }}>#</th>
@@ -94,7 +128,7 @@ const InvoiceTemplate = forwardRef(({ invoice }, ref) => {
         </thead>
         <tbody>
           {(invoice.items || []).map((item, i) => (
-            <tr key={i} style={{ borderBottom: '1px solid #e5e7eb', background: i % 2 === 0 ? '#f9fafb' : '#ffffff' }}>
+            <tr key={i} style={{ borderBottom: '1px solid #e5e7eb', background: i % 2 === 0 ? '#f0fdfa' : '#fff' }}>
               <td style={{ padding: '12px 16px', color: '#6b7280' }}>{i + 1}</td>
               <td style={{ padding: '12px 16px', color: '#1a1a2e', fontWeight: '500' }}>{item.description}</td>
               <td style={{ padding: '12px 16px', textAlign: 'center', color: '#6b7280' }}>{item.quantity || 1}</td>
@@ -111,8 +145,8 @@ const InvoiceTemplate = forwardRef(({ invoice }, ref) => {
       </table>
 
       {/* Totals */}
-      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '32px' }}>
-        <div style={{ width: '280px' }}>
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '32px', padding: '0 48px', zIndex: 2, position: 'relative' }}>
+        <div style={{ width: '320px', background: '#f9fafb', borderRadius: '12px', boxShadow: '0 1px 8px 0 rgba(129,140,248,0.04)', padding: '24px 28px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid #e5e7eb' }}>
             <span style={{ color: '#6b7280' }}>Subtotal</span>
             <span style={{ fontWeight: '500' }}>Rs. {subtotal.toLocaleString()}</span>
@@ -129,27 +163,33 @@ const InvoiceTemplate = forwardRef(({ invoice }, ref) => {
               <span style={{ fontWeight: '500', color: '#059669' }}>- Rs. {discount.toLocaleString()}</span>
             </div>
           )}
-          <div style={{ display: 'flex', justifyContent: 'space-between', padding: '12px 0', borderTop: '2px solid #0f1729', marginTop: '4px' }}>
-            <span style={{ fontWeight: '700', fontSize: '16px', color: '#0f1729' }}>Total</span>
-            <span style={{ fontWeight: '800', fontSize: '18px', color: '#2dd4bf' }}>Rs. {total.toLocaleString()}</span>
+          {lateFee > 0 && (
+            <div style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid #e5e7eb', color: '#b91c1c', fontWeight: 600 }}>
+              <span>Late Fee</span>
+              <span>+ Rs. 150</span>
+            </div>
+          )}
+          <div style={{ display: 'flex', justifyContent: 'space-between', padding: '14px 0', borderTop: '2px solid #0f1729', marginTop: '4px' }}>
+            <span style={{ fontWeight: '700', fontSize: '18px', color: '#0f1729', letterSpacing: '1px' }}>Total</span>
+            <span style={{ fontWeight: '900', fontSize: '22px', color: '#2dd4bf', letterSpacing: '1px' }}>Rs. {total.toLocaleString()}</span>
           </div>
         </div>
       </div>
 
       {/* Notes */}
       {invoice.notes && (
-        <div style={{ background: '#f0fdfa', border: '1px solid #99f6e4', borderRadius: '8px', padding: '16px', marginBottom: '24px' }}>
-          <h4 style={{ margin: '0 0 6px 0', fontSize: '12px', textTransform: 'uppercase', letterSpacing: '1px', color: '#0d9488' }}>Notes</h4>
-          <p style={{ margin: '0', color: '#475569', fontSize: '13px' }}>{invoice.notes}</p>
+        <div style={{ background: '#e0f2fe', border: '1px solid #bae6fd', borderRadius: '10px', padding: '18px 28px', margin: '0 48px 24px 48px', color: '#0369a1', fontSize: '14px', zIndex: 2, position: 'relative' }}>
+          <h4 style={{ margin: '0 0 6px 0', fontSize: '13px', textTransform: 'uppercase', letterSpacing: '1px', color: '#0d9488' }}>Notes</h4>
+          <p style={{ margin: '0', color: '#0369a1', fontSize: '14px' }}>{invoice.notes}</p>
         </div>
       )}
 
       {/* Footer */}
-      <div style={{ borderTop: '2px solid #e5e7eb', paddingTop: '20px', textAlign: 'center' }}>
-        <p style={{ margin: '0', color: '#9ca3af', fontSize: '12px' }}>
-          Thank you for choosing Ubadah Internet! For any queries, contact us at +92 3145205027
+      <div style={{ borderTop: '2.5px solid #e5e7eb', padding: '28px 48px 24px 48px', textAlign: 'center', background: 'linear-gradient(90deg, #f0fdfa 0%, #fff 100%)', borderBottomLeftRadius: '18px', borderBottomRightRadius: '18px', fontSize: '13px', color: '#64748b', zIndex: 2, position: 'relative' }}>
+        <p style={{ margin: '0', color: '#64748b', fontSize: '13px' }}>
+          Thank you for choosing <span style={{ color: '#2dd4bf', fontWeight: 700 }}>NBB Internet</span>! For any queries, contact us at <span style={{ color: '#818cf8', fontWeight: 600 }}>+92 3145205027</span> or <span style={{ color: '#818cf8', fontWeight: 600 }}>+92 349 3759146</span>
         </p>
-        <p style={{ margin: '6px 0 0', color: '#d1d5db', fontSize: '11px' }}>
+        <p style={{ margin: '6px 0 0', color: '#cbd5e1', fontSize: '12px' }}>
           This is a computer-generated invoice. No signature required.
         </p>
       </div>
